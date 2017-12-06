@@ -50,9 +50,13 @@ public class MouseController : MonoBehaviour {
 		float distance = Mathf.Sqrt(Mathf.Pow(dudePos.y - mousePos.y, 2) +  Mathf.Pow(dudePos.x - mousePos.x, 2));
 		Debug.Log ("Distance: " + distance.ToString());
 		if (distance < 2f) {
-			
-			if (distance > .7f) {
-				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance - .7f) / 1.3f)/2;
+			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 2f);
+			if (distance < 1f) {
+				hand.transform.localScale = new Vector3 (0.325f, 0.325f, 1);
+				//blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance - .7f) / 1.3f);
+			} else {
+				hand.transform.localScale = new Vector3 (0.625f, 0.625f, 1);
+				//blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance - .7f) / 1.3f);
 			}
 			if (blob.GetComponent<HingeJoint2D> ().connectedAnchor.x < 0f && !yes) {
 				//Destroy (GameObject.Find ("LargeWheel").GetComponent<HingeJoint2D> ());
