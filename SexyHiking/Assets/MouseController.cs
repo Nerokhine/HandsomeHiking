@@ -121,11 +121,11 @@ public class MouseController : MonoBehaviour {
 			hand.GetComponent<Rigidbody2D> ().mass = 2000;
 		} else {
 			cringeAnimationTimer += Time.deltaTime;
-			if (cringeAnimationTimer > 0.25f) {
+			if (cringeAnimationTimer > 0.12f) {
 				blob.GetComponent<SpriteRenderer> ().color = visible;
 				confusedFace.GetComponent<SpriteRenderer> ().color = invisible;
+				hand.GetComponent<Rigidbody2D> ().mass = 10;
 			}
-			hand.GetComponent<Rigidbody2D> ().mass = 10;
 		}
 
 		if (minAngle < 40) {
