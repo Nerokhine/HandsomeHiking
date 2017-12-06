@@ -31,6 +31,8 @@ public class MouseController : MonoBehaviour {
 		connectedAnchor = blob.GetComponent<HingeJoint2D> ().connectedAnchor;
 	}
 	void FixedUpdate () {
+		float speed = 1000;
+
 		float angle2 = hand.transform.localEulerAngles.z;
 		angle2 = ((angle2 + 270f) % 360f);
 		Debug.Log (angle2);
@@ -51,8 +53,9 @@ public class MouseController : MonoBehaviour {
 		Debug.Log ("Distance: " + distance.ToString());
 		if (distance < 2f) {
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 2f);
-			if (distance < 1f) {
-				hand.transform.localScale = new Vector3 (0.325f, 0.325f, 1);
+			if (distance < .9f) {
+				speed = 4000;
+				hand.transform.localScale = new Vector3 (0.625f - (.625f - .625f * (distance)/.9f), 0.625f - (.625f - .625f * (distance)/.9f), 1);
 				//blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance - .7f) / 1.3f);
 			} else {
 				hand.transform.localScale = new Vector3 (0.625f, 0.625f, 1);
@@ -106,7 +109,7 @@ public class MouseController : MonoBehaviour {
 		JointMotor2D motor = new JointMotor2D ();
 		motor.maxMotorTorque = 1000000;
 		float minAngle = Mathf.Min(Mathf.Abs(angle - angle2), Mathf.Abs(((360 - angle) + angle2)));
-		float speed = 1000;
+
 
 		Color32 visible = new Color32 (255, 255, 255, 255);
 		Color32 invisible = new Color32 (255, 255, 255, 0);
