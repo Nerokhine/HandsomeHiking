@@ -85,7 +85,6 @@ public class MouseController : MonoBehaviour {
 		if (distance < 2f) {
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 2f);
 			if (distance < .9f) {
-				speed = 8000;
 				hand.transform.localScale = new Vector3 (0.625f - (.625f - .625f * (distance) / .9f), 0.625f - (.625f - .625f * (distance) / .9f), 1);
 				//blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance - .7f) / 1.3f);
 			} else if (distance < .4f) {
@@ -195,7 +194,7 @@ public class MouseController : MonoBehaviour {
 
 			if (clockwise) {
 				motor.motorSpeed = -speed;
-				if (!isTouching && cringeAnimationTimer > .12f && distance > .7f) {
+				if (!isTouching && cringeAnimationTimer > .12f && distance > 1.1f) {
 					if (once2) {
 						foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
 							if (collider.isActiveAndEnabled) {
@@ -220,7 +219,7 @@ public class MouseController : MonoBehaviour {
 				}
 			} else {
 				motor.motorSpeed = speed;
-				if (!isTouching && cringeAnimationTimer > .12f && distance > .7f) {
+				if (!isTouching && cringeAnimationTimer > .12f && distance > 1.1f) {
 					if (once) {
 						foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
 							if (collider.isActiveAndEnabled) {
