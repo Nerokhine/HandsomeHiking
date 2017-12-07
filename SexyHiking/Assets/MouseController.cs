@@ -192,50 +192,54 @@ public class MouseController : MonoBehaviour {
 
 			if (clockwise) {
 				motor.motorSpeed = -speed;
-				if (once2) {
-					foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
-						if (collider.isActiveAndEnabled) {
-							collider.enabled = false;
-						} else {
-							collider.enabled = true;
+				if (!isTouching && cringeAnimationTimer > .12f) {
+					if (once2) {
+						foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
+							if (collider.isActiveAndEnabled) {
+								collider.enabled = false;
+							} else {
+								collider.enabled = true;
+							}
 						}
-					}
-					foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
-						if (collider.isActiveAndEnabled) {
-							collider.enabled = false;
-						} else {
-							collider.enabled = true;
+						foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
+							if (collider.isActiveAndEnabled) {
+								collider.enabled = false;
+							} else {
+								collider.enabled = true;
+							}
 						}
+						hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("YellowHand");
+						blob.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("face");
+						confusedFace.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("confused");
+						once2 = false;
 					}
-					hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("YellowHand");
-					blob.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("face");
-					confusedFace.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("confused");
-					once2 = false;
+					once = true;
 				}
-				once = true;
 			} else {
 				motor.motorSpeed = speed;
-				if (once) {
-					foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
-						if (collider.isActiveAndEnabled) {
-							collider.enabled = false;
-						} else {
-							collider.enabled = true;
+				if (!isTouching && cringeAnimationTimer > .12f) {
+					if (once) {
+						foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
+							if (collider.isActiveAndEnabled) {
+								collider.enabled = false;
+							} else {
+								collider.enabled = true;
+							}
 						}
-					}
-					foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
-						if (collider.isActiveAndEnabled) {
-							collider.enabled = false;
-						} else {
-							collider.enabled = true;
+						foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
+							if (collider.isActiveAndEnabled) {
+								collider.enabled = false;
+							} else {
+								collider.enabled = true;
+							}
 						}
+						hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("YellowHand2");
+						blob.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("face2");
+						confusedFace.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("confused2");
+						once = false;
 					}
-					hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("YellowHand2");
-					blob.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("face2");
-					confusedFace.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("confused2");
-					once = false;
+					once2 = true;
 				}
-				once2 = true;
 			}
 		}
 
