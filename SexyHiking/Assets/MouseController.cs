@@ -10,6 +10,9 @@ public class MouseController : MonoBehaviour {
 	public GameObject blob;
 	public GameObject confusedFace;
 	float cringeAnimationTimer = 0;
+	bool once = true;
+	bool once2 = true;
+	bool clockwise = true;
 	// Update is called once per frame
 
 	void LateUpdate(){
@@ -35,7 +38,7 @@ public class MouseController : MonoBehaviour {
 
 		float angle2 = hand.transform.localEulerAngles.z;
 		angle2 = ((angle2 + 270f) % 360f);
-		Debug.Log (angle2);
+		//Debug.Log (angle2);
 
 		Vector3 screenPoint = Input.mousePosition;
 		screenPoint.z = 5.0f; //distance of the plane from the camera
@@ -47,6 +50,34 @@ public class MouseController : MonoBehaviour {
 		}
 
 		angle = ((Mathf.Rad2Deg * angle + 90f) % 360f);
+
+		/*if (angle < 180) {
+			if (once) {
+				foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
+					if (collider.isActiveAndEnabled) {
+						collider.enabled = false;
+					} else {
+						collider.enabled = true;
+					}
+				}
+				hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("YellowHand2");
+				once = false;
+			}
+			once2 = true;
+		} else {
+			if (once2) {
+				foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
+					if (collider.isActiveAndEnabled) {
+						collider.enabled = false;
+					} else {
+						collider.enabled = true;
+					}
+				}
+				hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("YellowHand");
+				once2 = false;
+			}
+			once = true;
+		}*/
 		//angle += Mathf.PI/2f;
 		//angle = 90 - angle;
 		float distance = Mathf.Sqrt(Mathf.Pow(dudePos.y - mousePos.y, 2) +  Mathf.Pow(dudePos.x - mousePos.x, 2));
@@ -92,8 +123,15 @@ public class MouseController : MonoBehaviour {
 		Collider2D [] colliders = GameObject.FindObjectsOfType<Collider2D>();
 		last = Input.mousePosition;
 		bool isTouching = false;
+		PolygonCollider2D handCollider = null;
+		foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
+			if (collider.isActiveAndEnabled) {
+				handCollider = collider;
+				break;
+			}
+		}
 		foreach(Collider2D collider in colliders){
-			if (hand.GetComponent<PolygonCollider2D> ().IsTouching(collider)) {
+			if (handCollider.IsTouching(collider)) {
 				isTouching = true;
 				break;
 			}
@@ -131,31 +169,55 @@ public class MouseController : MonoBehaviour {
 		if (minAngle < 40) {
 			speed *= minAngle / 40f;
 		}
-
+			
 		if (minAngle > 3) {
 			if (angle > 180f && angle2 < 180) {
 				if (angle - angle2 > ((360 - angle) + angle2)) {
-					// Clockwise
-					motor.motorSpeed = -speed;
+					clockwise = true;
 				} else {
-					// Counter Clockwise
-					motor.motorSpeed = speed;
+					clockwise = false;
 				}
 			} else if (angle2 > 180 && angle < 180f) {
 				if (angle2 - angle > ((360 - angle2) + angle)) {
-					// Counter Clockwise
-					motor.motorSpeed = speed;
+					clockwise = false;
 				} else {
-					// Clockwise
-					motor.motorSpeed = -speed;
+					clockwise = true;
 				}
 			} else if (angle2 > angle) {
-				// Counter Clockwise
-				motor.motorSpeed = -speed;
+				clockwise = true;
 
 			} else {
-				// Clockwise
+				clockwise = false;
+			}
+
+			if (clockwise) {
+				motor.motorSpeed = -speed;
+				if (once2) {
+					foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
+						if (collider.isActiveAndEnabled) {
+							collider.enabled = false;
+						} else {
+							collider.enabled = true;
+						}
+					}
+					hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("YellowHand");
+					once2 = false;
+				}
+				once = true;
+			} else {
 				motor.motorSpeed = speed;
+				if (once) {
+					foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
+						if (collider.isActiveAndEnabled) {
+							collider.enabled = false;
+						} else {
+							collider.enabled = true;
+						}
+					}
+					hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("YellowHand2");
+					once = false;
+				}
+				once2 = true;
 			}
 		}
 
