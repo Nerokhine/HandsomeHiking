@@ -25,7 +25,7 @@ public class MouseController : MonoBehaviour {
 		GameObject.Find ("Main Camera").GetComponent<Camera> ().transform.position = 
 			new Vector3(blob.transform.position.x, 
 				blob.transform.position.y,
-				-5);
+				-10);
 	}
 
 	void Start(){
