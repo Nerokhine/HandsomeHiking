@@ -200,7 +200,16 @@ public class MouseController : MonoBehaviour {
 							collider.enabled = true;
 						}
 					}
+					foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
+						if (collider.isActiveAndEnabled) {
+							collider.enabled = false;
+						} else {
+							collider.enabled = true;
+						}
+					}
 					hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("YellowHand");
+					blob.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("face");
+					confusedFace.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("confused");
 					once2 = false;
 				}
 				once = true;
@@ -214,7 +223,16 @@ public class MouseController : MonoBehaviour {
 							collider.enabled = true;
 						}
 					}
+					foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
+						if (collider.isActiveAndEnabled) {
+							collider.enabled = false;
+						} else {
+							collider.enabled = true;
+						}
+					}
 					hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("YellowHand2");
+					blob.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("face2");
+					confusedFace.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite>("confused2");
 					once = false;
 				}
 				once2 = true;
