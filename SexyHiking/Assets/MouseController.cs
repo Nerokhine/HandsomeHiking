@@ -81,14 +81,15 @@ public class MouseController : MonoBehaviour {
 		//angle += Mathf.PI/2f;
 		//angle = 90 - angle;
 		float distance = Mathf.Sqrt(Mathf.Pow(dudePos.y - mousePos.y, 2) +  Mathf.Pow(dudePos.x - mousePos.x, 2));
-		Debug.Log ("Distance: " + distance.ToString());
+		//Debug.Log ("Distance: " + distance.ToString());
 		if (distance < 2f) {
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 2f);
-			if (distance < .9f) {
+			if (distance < .9f && distance > .7f) {
 				hand.transform.localScale = new Vector3 (0.625f - (.625f - .625f * (distance) / .9f), 0.625f - (.625f - .625f * (distance) / .9f), 1);
 				//blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance - .7f) / 1.3f);
-			} else if (distance < .4f) {
-				speed = 8000;
+			} else if (distance < .7f) {
+				speed = 16000;
+
 				hand.transform.localScale = new Vector3 (.05f, .05f, 1f);
 			} else {
 				hand.transform.localScale = new Vector3 (0.625f, 0.625f, 1);
@@ -120,7 +121,7 @@ public class MouseController : MonoBehaviour {
 		} else if (mousePos.x > dudePos.x && mousePos.y < dudePos.y) {
 			angle += 90;
 		}*/
-		Debug.Log ("Angle: " + angle);
+		//Debug.Log ("Angle: " + angle);
 
 		Collider2D [] colliders = GameObject.FindObjectsOfType<Collider2D>();
 		last = Input.mousePosition;
@@ -165,6 +166,9 @@ public class MouseController : MonoBehaviour {
 				blob.GetComponent<SpriteRenderer> ().color = visible;
 				confusedFace.GetComponent<SpriteRenderer> ().color = invisible;
 				hand.GetComponent<Rigidbody2D> ().mass = 10;
+				if (distance < .7f) {
+					hand.GetComponent<Rigidbody2D> ().mass = 0;
+				}
 			}
 		}
 
@@ -245,6 +249,7 @@ public class MouseController : MonoBehaviour {
 			}
 		}
 
+		Debug.Log (motor.motorSpeed);
 		blob.GetComponent<HingeJoint2D> ().motor = motor;
 
 	}
