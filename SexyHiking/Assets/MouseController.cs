@@ -157,8 +157,8 @@ public class MouseController : MonoBehaviour {
 			cringeAnimationTimer = 0;
 			blob.GetComponent<SpriteRenderer> ().color = invisible;
 			confusedFace.GetComponent<SpriteRenderer> ().color = visible;
-			speed = 200f;
-			hand.GetComponent<Rigidbody2D> ().mass = 2000;
+			speed = 400f;
+			hand.GetComponent<Rigidbody2D> ().mass = 4000;
 		} else {
 			cringeAnimationTimer += Time.deltaTime;
 			if (cringeAnimationTimer > 0.12f) {
