@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MouseController : MonoBehaviour {
-	Vector3 last;
-	bool yes = false;
+	public static float cameraDistance = -10f;
+	float speed;
+
 	Vector2 connectedAnchor;
 	public GameObject hand;
 	public GameObject blob;
@@ -14,61 +15,64 @@ public class MouseController : MonoBehaviour {
 	bool once2 = true;
 	bool clockwise = true;
 
-	void Update(){
-		GameObject.Find ("Main Camera").GetComponent<Camera> ().transform.position = 
-			new Vector3(blob.transform.position.x, 
-				blob.transform.position.y,
-				-10);
-	}
-
 	void Start(){
+		// Set camera zoom level
+		Camera.main.transform.position = new Vector3 (Camera.main.transform.position.x,
+			Camera.main.transform.position.y,
+			cameraDistance);
+		
 		blob.GetComponent<Rigidbody2D>().freezeRotation = true;
-		last = Input.mousePosition;
 		connectedAnchor = blob.GetComponent<HingeJoint2D> ().connectedAnchor;
 	}
+
+	void Update(){
+		// Camera follows blob
+		Camera.main.GetComponent<Camera> ().transform.position = new Vector3(
+			blob.transform.position.x, 
+			blob.transform.position.y,
+			cameraDistance);
+	}
+
 	void FixedUpdate () {
-		float speed = 1000;
+		speed = 1000;
 
-		float angle2 = hand.transform.localEulerAngles.z;
-		angle2 = ((angle2 + 270f) % 360f);
+		// Get the angle of the hand in degrees relative to the blob body
+		float handAngle = hand.transform.localEulerAngles.z;
+		handAngle = ((handAngle + 270f) % 360f);
 
-		Vector3 screenPoint = Input.mousePosition;
-		screenPoint.z = 5.0f; //distance of the plane from the camera
-		Vector3 mousePos = Camera.main.ScreenToWorldPoint(screenPoint);
-		Vector3 dudePos = blob.transform.position;
-		float angle = Mathf.Atan2(dudePos.y - mousePos.y, dudePos.x - mousePos.x); //Vector2.SignedAngle((Vector2)dudePos, (Vector2)mousePos);
-		if (angle < 0) {
-			angle = Mathf.PI + (Mathf.PI - Mathf.Abs (angle));
-		}
+		// Map mouse position to a world position
+		Vector3 mousePos = Input.mousePosition;
+		mousePos.z = -1 * cameraDistance;
+		mousePos = Camera.main.ScreenToWorldPoint(mousePos);
 
-		angle = ((Mathf.Rad2Deg * angle + 90f) % 360f);
+		// Get the angle of the mouse relative to the blob body
+		Vector3 blobPos = blob.transform.position;
+		float mouseAngle = Mathf.Atan2(blobPos.y - mousePos.y, blobPos.x - mousePos.x);
+		if (mouseAngle < 0) mouseAngle = Mathf.PI + (Mathf.PI - Mathf.Abs (mouseAngle));
+		mouseAngle = ((Mathf.Rad2Deg * mouseAngle + 90f) % 360f);
 
-		float distance = Mathf.Sqrt(Mathf.Pow(dudePos.y - mousePos.y, 2) +  Mathf.Pow(dudePos.x - mousePos.x, 2));
+		// Get the distance between the mouse and the blob
+		float distance = Mathf.Sqrt(Mathf.Pow(blobPos.y - mousePos.y, 2) +  Mathf.Pow(blobPos.x - mousePos.x, 2));
 		Debug.Log ("Distance: " + distance.ToString());
+
 		if (distance < 2f) {
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 2f);
 			if (distance < .9f && distance > .7f) {
-				hand.transform.localScale = new Vector3 (0.625f - (.625f - .625f * (distance) / .9f), 0.625f - (.625f - .625f * (distance) / .9f), 1);
-				//blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance - .7f) / 1.3f);
+				hand.transform.localScale = new Vector3 (0.5f - (.5f - .5f * (distance) / .9f), 0.5f - (.5f - .5f * (distance) / .9f), 1);
 			} else if (distance < .7f) {
 				speed = 16000;
 
 				hand.transform.localScale = new Vector3 (.05f, .05f, 1f);
 			} else {
-				hand.transform.localScale = new Vector3 (0.625f, 0.625f, 1);
-			}
-			if (blob.GetComponent<HingeJoint2D> ().connectedAnchor.x < 0f && !yes) {
-				yes = true;
+				hand.transform.localScale = new Vector3 (0.5f, 0.5f, 1);
 			}
 		} else {
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor;
-			yes = false;
 		}
 			
-		Debug.Log ("Angle: " + angle);
+		Debug.Log ("mouseAngle: " + mouseAngle);
 
 		Collider2D [] colliders = GameObject.FindObjectsOfType<Collider2D>();
-		last = Input.mousePosition;
 		bool isTouching = false;
 		PolygonCollider2D handCollider = null;
 		foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
@@ -87,7 +91,7 @@ public class MouseController : MonoBehaviour {
 		blob.GetComponent<HingeJoint2D> ().useMotor = true;
 		JointMotor2D motor = new JointMotor2D ();
 		motor.maxMotorTorque = 1000000;
-		float minAngle = Mathf.Min(Mathf.Abs(angle - angle2), Mathf.Abs(((360 - angle) + angle2)));
+		float minAngle = Mathf.Min(Mathf.Abs(mouseAngle - handAngle), Mathf.Abs(((360 - mouseAngle) + handAngle)));
 
 
 		Color32 visible = new Color32 (255, 255, 255, 255);
@@ -115,19 +119,19 @@ public class MouseController : MonoBehaviour {
 		}
 			
 		if (minAngle > 3) {
-			if (angle > 180f && angle2 < 180) {
-				if (angle - angle2 > ((360 - angle) + angle2)) {
+			if (mouseAngle > 180f && handAngle < 180) {
+				if (mouseAngle - handAngle > ((360 - mouseAngle) + handAngle)) {
 					clockwise = true;
 				} else {
 					clockwise = false;
 				}
-			} else if (angle2 > 180 && angle < 180f) {
-				if (angle2 - angle > ((360 - angle2) + angle)) {
+			} else if (handAngle > 180 && mouseAngle < 180f) {
+				if (handAngle - mouseAngle > ((360 - handAngle) + mouseAngle)) {
 					clockwise = false;
 				} else {
 					clockwise = true;
 				}
-			} else if (angle2 > angle) {
+			} else if (handAngle > mouseAngle) {
 				clockwise = true;
 
 			} else {
