@@ -14,6 +14,7 @@ public class MouseController : MonoBehaviour {
 	bool once = true;
 	bool once2 = true;
 	bool clockwise = true;
+	float lastDistance;
 
 	void Start(){
 		// Set camera zoom level
@@ -53,24 +54,19 @@ public class MouseController : MonoBehaviour {
 
 		// Get the distance between the mouse and the blob
 		float distance = Mathf.Sqrt(Mathf.Pow(blobPos.y - mousePos.y, 2) +  Mathf.Pow(blobPos.x - mousePos.x, 2));
+
 		Debug.Log ("Distance: " + distance.ToString());
+		Debug.Log ("mouseAngle: " + mouseAngle);
 
-		if (distance < 2f) {
-			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 2f);
-			if (distance < .9f && distance > .7f) {
-				hand.transform.localScale = new Vector3 (0.5f - (.5f - .5f * (distance) / .9f), 0.5f - (.5f - .5f * (distance) / .9f), 1);
-			} else if (distance < .7f) {
-				speed = 16000;
 
-				hand.transform.localScale = new Vector3 (.05f, .05f, 1f);
-			} else {
-				hand.transform.localScale = new Vector3 (0.5f, 0.5f, 1);
+
+		if (distance < 3f) {
+			if (distance > 1.5f) {
+				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f)/1.2f;
 			}
 		} else {
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor;
 		}
-			
-		Debug.Log ("mouseAngle: " + mouseAngle);
 
 		Collider2D [] colliders = GameObject.FindObjectsOfType<Collider2D>();
 		bool isTouching = false;
@@ -92,6 +88,9 @@ public class MouseController : MonoBehaviour {
 		JointMotor2D motor = new JointMotor2D ();
 		motor.maxMotorTorque = 1000000;
 		float minAngle = Mathf.Min(Mathf.Abs(mouseAngle - handAngle), Mathf.Abs(((360 - mouseAngle) + handAngle)));
+		minAngle = Mathf.Min (minAngle, 360 - minAngle);
+
+		Debug.Log ("Angle Difference: " + minAngle);
 
 
 		Color32 visible = new Color32 (255, 255, 255, 255);
@@ -140,7 +139,7 @@ public class MouseController : MonoBehaviour {
 
 			if (clockwise) {
 				motor.motorSpeed = -speed;
-				if (!isTouching && cringeAnimationTimer > .12f && distance > 1.1f) {
+				if (minAngle > 10f) {
 					if (once2) {
 						foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
 							if (collider.isActiveAndEnabled) {
@@ -165,7 +164,7 @@ public class MouseController : MonoBehaviour {
 				}
 			} else {
 				motor.motorSpeed = speed;
-				if (!isTouching && cringeAnimationTimer > .12f && distance > 1.1f) {
+				if (minAngle > 10f) {
 					if (once) {
 						foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
 							if (collider.isActiveAndEnabled) {
@@ -192,6 +191,8 @@ public class MouseController : MonoBehaviour {
 		}
 
 		blob.GetComponent<HingeJoint2D> ().motor = motor;
+
+		lastDistance = distance;
 
 	}
 }
