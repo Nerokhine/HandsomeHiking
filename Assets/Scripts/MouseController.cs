@@ -61,8 +61,10 @@ public class MouseController : MonoBehaviour {
 
 
 		if (distance < 3f) {
-			if (distance > 1.5f) {
-				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f)/1.2f;
+			if (distance > 1.7f) {
+				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
+			} else {
+				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (1.7f) / 3f);
 			}
 		} else {
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor;
