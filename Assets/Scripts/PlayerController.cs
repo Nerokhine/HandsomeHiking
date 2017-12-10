@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour {
 
 	float speed;
 	const float defaultSpeed = 1000f;
-	const float strength = 400f;
+	const float strength = 200f;
 	Vector2 connectedAnchor;
 	float cringeAnimationTimer = 0;
 	bool once = true;
