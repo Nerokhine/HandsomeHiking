@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MouseController : MonoBehaviour {
+public class PlayerController : MonoBehaviour {
 	public static float cameraDistance = -10f;
 	public GameObject hand;
 	public GameObject blob;
 	public GameObject confusedFace;
 
+	Sprite yellowHandSprite, yellowHandSprite2;
+	Sprite faceSprite, faceSprite2;
+	Sprite confusedSprite, confusedSprite2;
+
 	Color32 visible = new Color32 (255, 255, 255, 255);
 	Color32 invisible = new Color32 (255, 255, 255, 0);
 
 	float speed;
-	float strength = 400f;
+	const float defaultSpeed = 1000f;
+	const float strength = 400f;
 	Vector2 connectedAnchor;
 	float cringeAnimationTimer = 0;
 	bool once = true;
@@ -20,6 +25,13 @@ public class MouseController : MonoBehaviour {
 	bool clockwise = true;
 
 	void Start(){
+		yellowHandSprite = Resources.Load <Sprite> ("YellowHand");
+		yellowHandSprite2 = Resources.Load <Sprite> ("YellowHand2");
+		faceSprite = Resources.Load <Sprite> ("face");
+		faceSprite2 = Resources.Load <Sprite> ("face2");
+		confusedSprite = Resources.Load <Sprite> ("confused");
+		confusedSprite2 = Resources.Load <Sprite> ("confused2");
+
 		// Set camera zoom level
 		Camera.main.transform.position = new Vector3 (Camera.main.transform.position.x,
 			Camera.main.transform.position.y,
@@ -38,7 +50,7 @@ public class MouseController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		speed = 1000;
+		speed = defaultSpeed;
 
 		// Get the angle of the hand in degrees relative to the blob body
 		float handAngle = hand.transform.localEulerAngles.z;
@@ -163,9 +175,9 @@ public class MouseController : MonoBehaviour {
 								collider.enabled = true;
 							}
 						}
-						hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("YellowHand");
-						blob.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("face");
-						confusedFace.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("confused");
+						hand.GetComponent<SpriteRenderer> ().sprite =yellowHandSprite;
+						blob.GetComponent<SpriteRenderer> ().sprite = faceSprite;
+						confusedFace.GetComponent<SpriteRenderer> ().sprite = confusedSprite;
 						once2 = false;
 					}
 					once = true;
@@ -188,9 +200,9 @@ public class MouseController : MonoBehaviour {
 								collider.enabled = true;
 							}
 						}
-						hand.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("YellowHand2");
-						blob.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("face2");
-						confusedFace.GetComponent<SpriteRenderer> ().sprite = Resources.Load <Sprite> ("confused2");
+						hand.GetComponent<SpriteRenderer> ().sprite = yellowHandSprite2;
+						blob.GetComponent<SpriteRenderer> ().sprite = faceSprite2;
+						confusedFace.GetComponent<SpriteRenderer> ().sprite = confusedSprite2;
 						once = false;
 					}
 					once2 = true;
