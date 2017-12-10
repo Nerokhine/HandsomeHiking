@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class MouseController : MonoBehaviour {
 	public static float cameraDistance = -10f;
-	float speed;
-
-	Vector2 connectedAnchor;
 	public GameObject hand;
 	public GameObject blob;
 	public GameObject confusedFace;
+
+	Color32 visible = new Color32 (255, 255, 255, 255);
+	Color32 invisible = new Color32 (255, 255, 255, 0);
+
+	float speed;
+	float strength = 400f;
+	Vector2 connectedAnchor;
 	float cringeAnimationTimer = 0;
 	bool once = true;
 	bool once2 = true;
 	bool clockwise = true;
-	float lastDistance;
 
 	void Start(){
 		// Set camera zoom level
@@ -59,7 +62,7 @@ public class MouseController : MonoBehaviour {
 		Debug.Log ("mouseAngle: " + mouseAngle);
 
 
-
+		// Adjust the anchor of the hand based on the distance of the mouse/touch to the blob
 		if (distance < 3f) {
 			if (distance > 1.7f) {
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
@@ -73,35 +76,29 @@ public class MouseController : MonoBehaviour {
 		Collider2D [] colliders = GameObject.FindObjectsOfType<Collider2D>();
 		bool isTouching = false;
 		PolygonCollider2D handCollider = null;
+
+		// Get the active collider for the hand
 		foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
 			if (collider.isActiveAndEnabled) {
 				handCollider = collider;
 				break;
 			}
 		}
+
+		// Check if the hand is touching a collider
 		foreach(Collider2D collider in colliders){
 			if (handCollider.IsTouching(collider)) {
 				isTouching = true;
 				break;
 			}
 		}
-		
-		blob.GetComponent<HingeJoint2D> ().useMotor = true;
-		JointMotor2D motor = new JointMotor2D ();
-		motor.maxMotorTorque = 1000000;
-		float minAngle = Mathf.Min(Mathf.Abs(mouseAngle - handAngle), Mathf.Abs(((360 - mouseAngle) + handAngle)));
-		minAngle = Mathf.Min (minAngle, 360 - minAngle);
 
-		Debug.Log ("Angle Difference: " + minAngle);
-
-
-		Color32 visible = new Color32 (255, 255, 255, 255);
-		Color32 invisible = new Color32 (255, 255, 255, 0);
+		// Hand Touching Logic (face animation and mass and motor speed adjustments)
 		if (isTouching) {
 			cringeAnimationTimer = 0;
 			blob.GetComponent<SpriteRenderer> ().color = invisible;
 			confusedFace.GetComponent<SpriteRenderer> ().color = visible;
-			speed = 400f;
+			speed = strength;
 			hand.GetComponent<Rigidbody2D> ().mass = 4000;
 		} else {
 			cringeAnimationTimer += Time.deltaTime;
@@ -109,17 +106,26 @@ public class MouseController : MonoBehaviour {
 				blob.GetComponent<SpriteRenderer> ().color = visible;
 				confusedFace.GetComponent<SpriteRenderer> ().color = invisible;
 				hand.GetComponent<Rigidbody2D> ().mass = 10;
-				if (distance < .7f) {
-					hand.GetComponent<Rigidbody2D> ().mass = 0;
-				}
 			}
 		}
 
+		blob.GetComponent<HingeJoint2D> ().useMotor = true;
+		JointMotor2D motor = new JointMotor2D ();
+		motor.maxMotorTorque = 1000000;
+
+		// Get the angle between the mouse/touch and the hand
+		float minAngle = Mathf.Min(Mathf.Abs(mouseAngle - handAngle), Mathf.Abs(((360 - mouseAngle) + handAngle)));
+		minAngle = Mathf.Min (minAngle, 360 - minAngle);
+
+		Debug.Log ("Angle Difference: " + minAngle);
+
+		// Slow down hand rotation when the angle between the hand and the mouse/touch is small
 		if (minAngle < 40) {
 			speed *= minAngle / 40f;
 		}
 			
 		if (minAngle > 3) {
+			// Figure out which direction for the hand to rotate in
 			if (mouseAngle > 180f && handAngle < 180) {
 				if (mouseAngle - handAngle > ((360 - mouseAngle) + handAngle)) {
 					clockwise = true;
@@ -193,8 +199,6 @@ public class MouseController : MonoBehaviour {
 		}
 
 		blob.GetComponent<HingeJoint2D> ().motor = motor;
-
-		lastDistance = distance;
 
 	}
 }
