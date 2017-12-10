@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour {
 								collider.enabled = true;
 							}
 						}
-						hand.GetComponent<SpriteRenderer> ().sprite =yellowHandSprite;
+						hand.GetComponent<SpriteRenderer> ().sprite = yellowHandSprite;
 						blob.GetComponent<SpriteRenderer> ().sprite = faceSprite;
 						confusedFace.GetComponent<SpriteRenderer> ().sprite = confusedSprite;
 						once2 = false;
