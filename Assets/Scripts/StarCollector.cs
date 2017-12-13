@@ -16,7 +16,7 @@ public class StarCollector : MonoBehaviour {
 	void FixedUpdate () {
 		if (GetComponent<PolygonCollider2D> ().IsTouching (blobCollider) || GetComponent<PolygonCollider2D> ().IsTouching (handCollider)) {
 			collected = true;
-			Destroy (gameObject);
+			GetComponent<SpriteRenderer> ().sprite = null;
 		}
 	}
 }
