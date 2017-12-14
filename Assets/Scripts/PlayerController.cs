@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour {
 	float cringeAnimationTimer = 0;
 	bool once = true;
 	bool once2 = true;
+	bool once3 = true;
 	bool clockwise = true;
 
 	void Start(){
@@ -112,6 +113,10 @@ public class PlayerController : MonoBehaviour {
 			confusedFace.GetComponent<SpriteRenderer> ().color = visible;
 			speed = strength;
 			hand.GetComponent<Rigidbody2D> ().mass = 4000;
+			if (once3) {
+				hand.GetComponent<Rigidbody2D> ().velocity = Vector2.zero;
+				once3 = false;
+			}
 		} else {
 			cringeAnimationTimer += Time.deltaTime;
 			if (cringeAnimationTimer > 0.12f) {
@@ -119,6 +124,7 @@ public class PlayerController : MonoBehaviour {
 				confusedFace.GetComponent<SpriteRenderer> ().color = invisible;
 				hand.GetComponent<Rigidbody2D> ().mass = 10;
 			}
+			once3 = true;
 		}
 
 		blob.GetComponent<HingeJoint2D> ().useMotor = true;
@@ -168,13 +174,13 @@ public class PlayerController : MonoBehaviour {
 								collider.enabled = true;
 							}
 						}
-						foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
+						/*foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
 							if (collider.isActiveAndEnabled) {
 								collider.enabled = false;
 							} else {
 								collider.enabled = true;
 							}
-						}
+						}*/
 						hand.GetComponent<SpriteRenderer> ().sprite = yellowHandSprite;
 						blob.GetComponent<SpriteRenderer> ().sprite = faceSprite;
 						confusedFace.GetComponent<SpriteRenderer> ().sprite = confusedSprite;
@@ -193,13 +199,13 @@ public class PlayerController : MonoBehaviour {
 								collider.enabled = true;
 							}
 						}
-						foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
+						/*foreach (PolygonCollider2D collider in blob.GetComponents<PolygonCollider2D>()) {
 							if (collider.isActiveAndEnabled) {
 								collider.enabled = false;
 							} else {
 								collider.enabled = true;
 							}
-						}
+						}*/
 						hand.GetComponent<SpriteRenderer> ().sprite = yellowHandSprite2;
 						blob.GetComponent<SpriteRenderer> ().sprite = faceSprite2;
 						confusedFace.GetComponent<SpriteRenderer> ().sprite = confusedSprite2;
