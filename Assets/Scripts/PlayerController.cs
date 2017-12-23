@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour {
 	Color32 invisible = new Color32 (255, 255, 255, 0);
 
 	float speed;
+	float lastDistance;
 	const float defaultSpeed = 1000f;
 	const float strength = 200f;
 	Vector2 connectedAnchor;
@@ -71,21 +72,9 @@ public class PlayerController : MonoBehaviour {
 		// Get the distance between the mouse and the blob
 		float distance = Mathf.Sqrt(Mathf.Pow(blobPos.y - mousePos.y, 2) +  Mathf.Pow(blobPos.x - mousePos.x, 2));
 
-		Debug.Log ("Distance: " + distance.ToString());
-		Debug.Log ("mouseAngle: " + mouseAngle);
-
-
-		// Adjust the anchor of the hand based on the distance of the mouse/touch to the blob
-		if (distance < 3f) {
-			if (distance > 1.7f) {
-				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
-			} else {
-				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (1.7f) / 3f);
-			}
-		} else {
-			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor;
-		}
-
+		//Debug.Log ("Distance: " + distance.ToString());
+		//Debug.Log ("mouseAngle: " + mouseAngle);
+		//Debug.Log("Hand Angle: " + (360 - handAngle));
 		Collider2D [] colliders = GameObject.FindObjectsOfType<Collider2D>();
 		bool isTouching = false;
 		PolygonCollider2D handCollider = null;
@@ -105,6 +94,27 @@ public class PlayerController : MonoBehaviour {
 				break;
 			}
 		}
+
+		// Adjust the anchor of the hand based on the distance of the mouse/touch to the blob
+		if (distance < 3f) {
+			if (lastDistance < distance && isTouching) {
+				float magnitude = (distance - lastDistance) * 10000000;
+				Debug.Log ("X: " + Mathf.Sin((360 - handAngle) * Mathf.Deg2Rad * -1));
+				Debug.Log ("Y: " + Mathf.Cos((360 - handAngle) * Mathf.Deg2Rad * -1));
+				blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1,
+					Mathf.Cos((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1));
+			}
+			if (distance > 1.7f) {
+				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
+			} else {
+				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (1.7f) / 3f);
+			}
+		} else {
+			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor;
+		}
+
+		lastDistance = distance;
+
 
 		// Hand Touching Logic (face animation and mass and motor speed adjustments)
 		if (isTouching) {
@@ -135,7 +145,7 @@ public class PlayerController : MonoBehaviour {
 		float minAngle = Mathf.Min(Mathf.Abs(mouseAngle - handAngle), Mathf.Abs(((360 - mouseAngle) + handAngle)));
 		minAngle = Mathf.Min (minAngle, 360 - minAngle);
 
-		Debug.Log ("Angle Difference: " + minAngle);
+		//Debug.Log ("Angle Difference: " + minAngle);
 
 		// Slow down hand rotation when the angle between the hand and the mouse/touch is small
 		if (minAngle < 40) {
