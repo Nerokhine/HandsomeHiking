@@ -19,6 +19,8 @@ public class StarCollector : MonoBehaviour {
 			|| GetComponent<PolygonCollider2D> ().IsTouching (handColliders[0]))) {
 			collected = true;
 			GetComponent<SpriteRenderer> ().enabled = false;
+			GetComponent<PolygonCollider2D> ().enabled = false;
+
 		}
 	}
 }
