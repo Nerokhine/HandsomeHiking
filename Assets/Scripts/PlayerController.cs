@@ -15,8 +15,8 @@ public class PlayerController : MonoBehaviour {
 	Color32 visible = new Color32 (255, 255, 255, 255);
 	Color32 invisible = new Color32 (255, 255, 255, 0);
 
-	const float maxMagnitudePush = 10000000;
-	const float minMagnitudePush = 3000000;
+	const float maxMagnitudePush = 15000000;
+	const float minMagnitudePush = 1000000;
 	float speed;
 	float lastDistance;
 	const float defaultSpeed = 1000f;
