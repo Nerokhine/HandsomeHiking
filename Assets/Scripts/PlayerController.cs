@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour {
 	Color32 visible = new Color32 (255, 255, 255, 255);
 	Color32 invisible = new Color32 (255, 255, 255, 0);
 
+	const float maxMagnitudePush = 10000000;
+	const float minMagnitudePush = 3000000;
 	float speed;
 	float lastDistance;
 	const float defaultSpeed = 1000f;
@@ -25,8 +27,10 @@ public class PlayerController : MonoBehaviour {
 	bool once2 = true;
 	bool once3 = true;
 	bool clockwise = true;
+	bool oncePush;
 
 	void Start(){
+		oncePush = true;
 		yellowHandSprite = Resources.Load <Sprite> ("YellowHand");
 		yellowHandSprite2 = Resources.Load <Sprite> ("YellowHand2");
 		faceSprite = Resources.Load <Sprite> ("face");
@@ -99,10 +103,19 @@ public class PlayerController : MonoBehaviour {
 		if (distance < 3f) {
 			if (lastDistance < distance && isTouching) {
 				float magnitude = (distance - lastDistance) * 10000000;
-				Debug.Log ("X: " + Mathf.Sin((360 - handAngle) * Mathf.Deg2Rad * -1));
-				Debug.Log ("Y: " + Mathf.Cos((360 - handAngle) * Mathf.Deg2Rad * -1));
-				blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1,
-					Mathf.Cos((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1));
+				if (magnitude > maxMagnitudePush) {
+					Debug.Log ("Too Much Force");
+				} else if (magnitude < minMagnitudePush) {
+					Debug.Log ("Too Little Force");
+				} else if (oncePush) {
+					oncePush = false;
+					Debug.Log ("X: " + Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad * -1));
+					Debug.Log ("Y: " + Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad * -1));
+					blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1,
+						Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1));
+				}
+			} else {
+				oncePush = true;
 			}
 			if (distance > 1.7f) {
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
