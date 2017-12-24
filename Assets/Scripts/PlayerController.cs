@@ -28,8 +28,12 @@ public class PlayerController : MonoBehaviour {
 	bool once3 = true;
 	bool clockwise = true;
 	bool oncePush;
+	float pushCounter;
+	float pushRunningTotal;
 
 	void Start(){
+		pushCounter = 0;
+		pushRunningTotal = 0;
 		oncePush = true;
 		yellowHandSprite = Resources.Load <Sprite> ("YellowHand");
 		yellowHandSprite2 = Resources.Load <Sprite> ("YellowHand2");
@@ -102,20 +106,32 @@ public class PlayerController : MonoBehaviour {
 		// Adjust the anchor of the hand based on the distance of the mouse/touch to the blob
 		if (distance < 3f) {
 			if (lastDistance < distance && isTouching) {
+				oncePush = true;
 				float magnitude = (distance - lastDistance) * 10000000;
 				if (magnitude > maxMagnitudePush) {
 					Debug.Log ("Too Much Force");
 				} else if (magnitude < minMagnitudePush) {
 					Debug.Log ("Too Little Force");
-				} else if (oncePush) {
-					oncePush = false;
-					Debug.Log ("X: " + Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad * -1));
-					Debug.Log ("Y: " + Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad * -1));
-					blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1,
-						Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1));
+				} else {
+					pushCounter += 1f;
+					pushRunningTotal += magnitude;
+
+					//Debug.Log ("X: " + Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad * -1));
+					//Debug.Log ("Y: " + Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad * -1));
+					//blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1,
+					//	Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1));
 				}
 			} else {
-				oncePush = true;
+				pushRunningTotal = 0;
+				pushCounter = 0;
+				/*if (oncePush) {
+					float average = pushRunningTotal / pushCounter;
+					blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * average * -1,
+						Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * average * -1));
+					oncePush = false;
+					pushRunningTotal = 0;
+					average = 0;
+				}*/
 			}
 			if (distance > 1.7f) {
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
@@ -123,6 +139,15 @@ public class PlayerController : MonoBehaviour {
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (1.7f) / 3f);
 			}
 		} else {
+			if (oncePush && pushCounter > 0f) {
+				float average = pushRunningTotal / pushCounter;
+				blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * average * -1,
+					Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * average * -1));
+				oncePush = false;
+				pushRunningTotal = 0;
+				pushCounter = 0;
+				average = 0;
+			}
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor;
 		}
 
