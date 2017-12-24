@@ -15,7 +15,8 @@ public class PlayerController : MonoBehaviour {
 	Color32 visible = new Color32 (255, 255, 255, 255);
 	Color32 invisible = new Color32 (255, 255, 255, 0);
 
-	const float maxMagnitudePush = 10000000;
+	const float maxMagnitudePush = 7500000;
+	float maxSoFarPush;
 	float speed;
 	float lastDistance;
 	const float defaultSpeed = 1000f;
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour {
 	float pushRunningTotal;
 
 	void Start(){
+		maxSoFarPush = 0;
 		pushCounter = 0;
 		pushRunningTotal = 0;
 		oncePush = true;
@@ -106,20 +108,24 @@ public class PlayerController : MonoBehaviour {
 		if (distance < 3f) {
 			if (lastDistance < distance && isTouching) {
 				oncePush = true;
-				float magnitude = (distance - lastDistance) * 20000000;
+				float magnitude = (distance - lastDistance) * 10000000;
 				if (magnitude > maxMagnitudePush) {
 					magnitude = maxMagnitudePush;
 				}
-				pushCounter += 1f;
-				pushRunningTotal += magnitude;
+				if (magnitude > maxSoFarPush) {
+					maxSoFarPush = magnitude;
+				}
+				//pushCounter += 1f;
+				//pushRunningTotal += magnitude;
 
 				//Debug.Log ("X: " + Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad * -1));
 				//Debug.Log ("Y: " + Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad * -1));
 				//blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1,
 				//	Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * magnitude * -1));
 			} else {
-				pushRunningTotal = 0;
-				pushCounter = 0;
+				//pushRunningTotal = 0;
+				//pushCounter = 0;
+				maxSoFarPush = 0;
 				/*if (oncePush) {
 					float average = pushRunningTotal / pushCounter;
 					blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * average * -1,
@@ -135,14 +141,14 @@ public class PlayerController : MonoBehaviour {
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (1.7f) / 3f);
 			}
 		} else {
-			if (oncePush && pushCounter > 0f) {
-				float average = pushRunningTotal / pushCounter;
-				blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * average * -1,
-					Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * average * -1));
+			if (oncePush) {
+				//float average = pushRunningTotal / pushCounter;
+				blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * maxSoFarPush * -1,
+					Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * maxSoFarPush * -1));
 				oncePush = false;
-				pushRunningTotal = 0;
-				pushCounter = 0;
-				average = 0;
+				//pushRunningTotal = 0;
+				//pushCounter = 0;
+				//average = 0;
 			}
 			blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor;
 		}
