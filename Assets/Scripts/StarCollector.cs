@@ -9,6 +9,7 @@ public class StarCollector : MonoBehaviour {
 		if (collider.gameObject.name == "Blob" || collider.gameObject.name == "Hand") {
 			collected = true;
 			GetComponent<SpriteRenderer> ().enabled = false;
+			GetComponent<PolygonCollider2D> ().enabled = false;
 		}
 	}
 }

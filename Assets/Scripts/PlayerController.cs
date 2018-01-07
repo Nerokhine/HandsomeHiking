@@ -215,7 +215,7 @@ public class PlayerController : MonoBehaviour {
 
 			if (clockwise) {
 				motor.motorSpeed = -speed;
-				if (minAngle > 10f) {
+				if (minAngle > 20f) {
 					if (once2) {
 						foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
 							if (collider.isActiveAndEnabled) {
@@ -240,7 +240,7 @@ public class PlayerController : MonoBehaviour {
 				}
 			} else {
 				motor.motorSpeed = speed;
-				if (minAngle > 10f) {
+				if (minAngle > 20f) {
 					if (once) {
 						foreach (PolygonCollider2D collider in hand.GetComponents<PolygonCollider2D>()) {
 							if (collider.isActiveAndEnabled) {
