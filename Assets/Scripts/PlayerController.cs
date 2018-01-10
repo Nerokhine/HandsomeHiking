@@ -39,10 +39,10 @@ public class PlayerController : MonoBehaviour {
 		oncePush = true;
 		yellowHandSprite = Resources.Load <Sprite> ("YellowHand");
 		yellowHandSprite2 = Resources.Load <Sprite> ("YellowHand2");
-		faceSprite = Resources.Load <Sprite> ("face");
-		faceSprite2 = Resources.Load <Sprite> ("face2");
-		confusedSprite = Resources.Load <Sprite> ("confused");
-		confusedSprite2 = Resources.Load <Sprite> ("confused2");
+		faceSprite = Resources.Load <Sprite> ("blob");
+		faceSprite2 = Resources.Load <Sprite> ("blob2");
+		confusedSprite = Resources.Load <Sprite> ("blobStretch");
+		confusedSprite2 = Resources.Load <Sprite> ("blobStretch2");
 
 		// Set camera zoom level
 		Camera.main.transform.position = new Vector3 (Camera.main.transform.position.x,
