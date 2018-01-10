@@ -27,7 +27,7 @@ public class LevelSelection : MonoBehaviour {
 			SceneManager.LoadScene ("Level4");
 			break;
 		case 5:
-			SceneManager.LoadScene ("Level5");
+			SceneManager.LoadScene ("Level5", LoadSceneMode.Single);
 			break;
 		case 6:
 			SceneManager.LoadScene ("Level6");
