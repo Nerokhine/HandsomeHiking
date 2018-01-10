@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour {
 	bool once3 = true;
 	bool clockwise = true;
 	bool oncePush;
+	bool hasTouched = false;
 	float pushCounter;
 	float pushRunningTotal;
 
@@ -61,6 +62,29 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+		
+		if (Input.touchCount > 0)
+			hasTouched = true;
+
+		#if UNITY_ANDROID
+		// prevent strange behaviour on mobile when you have not touched the screen yet
+		if (!hasTouched){
+			#if UNITY_EDITOR
+			#else
+			return;
+			#endif
+		}
+		#endif
+
+		#if UNITY_IOS
+		if (!hasTouched){
+			#if UNITY_EDITOR
+			#else
+			return;
+			#endif
+		}
+		#endif
+			
 		speed = defaultSpeed;
 
 		// Get the angle of the hand in degrees relative to the blob body
