@@ -104,6 +104,10 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
+		// Get the angle between the mouse/touch and the hand
+		float minAngle = Mathf.Min(Mathf.Abs(mouseAngle - handAngle), Mathf.Abs(((360 - mouseAngle) + handAngle)));
+		minAngle = Mathf.Min (minAngle, 360 - minAngle);
+
 		// Adjust the anchor of the hand based on the distance of the mouse/touch to the blob
 		if (distance < 3f) {
 			if (lastDistance < distance && isTouching) {
@@ -136,12 +140,20 @@ public class PlayerController : MonoBehaviour {
 				}*/
 			}
 			if (distance > 1.7f) {
+				Vector2 tempConnectedAnchor = blob.GetComponent<HingeJoint2D> ().connectedAnchor;
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
+				if(isTouching && minAngle < 10f){
+					blob.GetComponent<Rigidbody2D> ().mass = 100;
+				}else{
+					blob.GetComponent<Rigidbody2D> ().mass = 10000;
+				}
 			} else {
+				blob.GetComponent<Rigidbody2D> ().mass = 10000;
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (1.7f) / 3f);
 			}
 		} else {
 			if (oncePush) {
+				blob.GetComponent<Rigidbody2D> ().mass = 10000;
 				//float average = pushRunningTotal / pushCounter;
 				blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * maxSoFarPush * -1,
 					Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * maxSoFarPush * -1));
@@ -181,9 +193,7 @@ public class PlayerController : MonoBehaviour {
 		JointMotor2D motor = new JointMotor2D ();
 		motor.maxMotorTorque = 1000000;
 
-		// Get the angle between the mouse/touch and the hand
-		float minAngle = Mathf.Min(Mathf.Abs(mouseAngle - handAngle), Mathf.Abs(((360 - mouseAngle) + handAngle)));
-		minAngle = Mathf.Min (minAngle, 360 - minAngle);
+
 
 		//Debug.Log ("Angle Difference: " + minAngle);
 
