@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour {
 		if (distance < 3f) {
 			if (lastDistance < distance && isTouching) {
 				oncePush = true;
-				float magnitude = (distance - lastDistance) * 10000000;
+				float magnitude = (distance - lastDistance) * 20000000;
 				if (magnitude > maxMagnitudePush) {
 					magnitude = maxMagnitudePush;
 				}
@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour {
 				Vector2 tempConnectedAnchor = blob.GetComponent<HingeJoint2D> ().connectedAnchor;
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
 				if(isTouching && minAngle < 10f){
-					blob.GetComponent<Rigidbody2D> ().mass = 100;
+					blob.GetComponent<Rigidbody2D> ().mass = 40;
 				}else{
 					blob.GetComponent<Rigidbody2D> ().mass = 10000;
 				}
