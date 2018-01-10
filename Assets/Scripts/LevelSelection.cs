@@ -5,9 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class LevelSelection : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+	public GameObject levelPanel;
+	public GameObject titlePanel;
+
+	public void ChangeToLevelSelect(){
+		titlePanel.SetActive (false);
+	}
+
+	public void BackToTitle(){
+		titlePanel.SetActive (true);
 	}
 
 	public void LoadLevel(int level){
