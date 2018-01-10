@@ -2493,11 +2493,11 @@ Prefab:
         type: 3}
     - target: {fileID: 4569583188292518, guid: 46f110f13dfbf4f74b3e1678e939a3c1, type: 2}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 4569583188292518, guid: 46f110f13dfbf4f74b3e1678e939a3c1, type: 2}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 46f110f13dfbf4f74b3e1678e939a3c1, type: 2}
