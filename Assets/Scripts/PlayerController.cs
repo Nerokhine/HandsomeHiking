@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
 	public static float cameraDistance = -10f;
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		if (Input.touchCount > 0){
+		if (Input.touchCount > 0 && !EventSystem.current.IsPointerOverGameObject()){
 			hasTouched = true;
 			useLastTouch = false;
 		}else {
@@ -89,7 +90,6 @@ public class PlayerController : MonoBehaviour {
 			#endif
 		}
 		#endif
-			
 		speed = defaultSpeed;
 
 		// Get the angle of the hand in degrees relative to the blob body
