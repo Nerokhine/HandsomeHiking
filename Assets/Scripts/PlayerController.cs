@@ -62,7 +62,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		
 		if (Input.touchCount > 0)
 			hasTouched = true;
 
