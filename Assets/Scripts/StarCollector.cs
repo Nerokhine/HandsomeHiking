@@ -10,6 +10,7 @@ public class StarCollector : MonoBehaviour {
 			collected = true;
 			GetComponent<SpriteRenderer> ().enabled = false;
 			GetComponent<PolygonCollider2D> ().enabled = false;
+			GameObject.FindObjectOfType<LevelController> ().CollectStar();
 		}
 	}
 }
