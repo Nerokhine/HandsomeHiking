@@ -48,7 +48,7 @@ public class LevelSelection : MonoBehaviour {
 			SceneManager.LoadScene ("Level9");
 			break;
 		default:
-			Debug.Log ("This shouldn't happen");
+			SceneManager.LoadScene ("MainMenu");
 			break;
 		}
 	}
