@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour {
 	bool clockwise = true;
 	bool oncePush;
 	bool hasTouched = false;
+	bool useLastTouch = false;
+	Vector2 lastTouch;
 	float pushCounter;
 	float pushRunningTotal;
 
@@ -62,8 +64,12 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		if (Input.touchCount > 0)
+		if (Input.touchCount > 0){
 			hasTouched = true;
+			useLastTouch = false;
+		}else {
+			useLastTouch = true;
+		}
 
 		#if UNITY_ANDROID
 		// prevent strange behaviour on mobile when you have not touched the screen yet
@@ -91,14 +97,25 @@ public class PlayerController : MonoBehaviour {
 		handAngle = ((handAngle + 270f) % 360f);
 
 		// Map mouse position to a world position
+		Vector3 mousePos;
 		#if UNITY_IOS && !UNITY_EDITOR
-		Vector3 mousePos = Input.touches[0].position;
+		if(useLastTouch){
+			mousePos = lastTouch;
+		}else{
+			mousePos = Input.touches[0].position;
+			lastTouch = mousePos;
+		}
 		#endif
 		#if UNITY_ANDROID && !UNITY_EDITOR
-		Vector3 mousePos = Input.touches[0].position;
+		if(useLastTouch){
+			mousePos = lastTouch;
+		}else{
+			mousePos = Input.touches[0].position;
+			lastTouch = mousePos;
+		}
 		#endif
 		#if UNITY_EDITOR
-		Vector3 mousePos = Input.mousePosition;
+		mousePos = Input.mousePosition;
 		#endif
 
 		mousePos.z = -1 * cameraDistance;
