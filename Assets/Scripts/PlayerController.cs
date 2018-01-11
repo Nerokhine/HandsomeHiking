@@ -92,7 +92,16 @@ public class PlayerController : MonoBehaviour {
 		handAngle = ((handAngle + 270f) % 360f);
 
 		// Map mouse position to a world position
+		#if UNITY_IOS && !UNITY_EDITOR
+		Vector3 mousePos = Input.touches[0].position;
+		#endif
+		#if UNITY_ANDROID && !UNITY_EDITOR
+		Vector3 mousePos = Input.touches[0].position;
+		#endif
+		#if UNITY_EDITOR
 		Vector3 mousePos = Input.mousePosition;
+		#endif
+
 		mousePos.z = -1 * cameraDistance;
 		mousePos = Camera.main.ScreenToWorldPoint(mousePos);
 
