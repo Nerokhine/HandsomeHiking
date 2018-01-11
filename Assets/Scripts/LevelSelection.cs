@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_ADS
+using UnityEngine.Advertisements;
+#endif
 
 public class LevelSelection : MonoBehaviour {
 
 	public GameObject levelPanel;
 	public GameObject titlePanel;
+
+	void Start(){
+		#if UNITY_ADS
+		Advertisement.Initialize ("1666836");
+		#endif
+	}
 
 	public void ChangeToLevelSelect(){
 		titlePanel.SetActive (false);
@@ -17,6 +26,9 @@ public class LevelSelection : MonoBehaviour {
 	}
 
 	public void LoadLevel(int level){
+		#if UNITY_ADS
+		Advertisement.Show();
+		#endif
 		
 		switch (level)
 		{
