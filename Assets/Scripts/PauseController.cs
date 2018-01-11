@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class PauseController : MonoBehaviour {
 
 	public GameObject pausePanel;
+	public GameObject blurPanel;
 
 	public void OnPressPause(){
 		Time.timeScale = 0;
@@ -13,12 +14,14 @@ public class PauseController : MonoBehaviour {
 			OnPressResume ();
 		} else {
 			pausePanel.SetActive (true);
+			blurPanel.SetActive (true);
 		}
 	}
 
 	public void OnPressResume(){
 		Time.timeScale = 1;
 		pausePanel.SetActive (false);
+		blurPanel.SetActive (false);
 	}
 
 	public void OnPressQuit(){
