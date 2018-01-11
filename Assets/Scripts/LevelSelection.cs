@@ -33,7 +33,7 @@ public class LevelSelection : MonoBehaviour {
 			SceneManager.LoadScene ("Level4");
 			break;
 		case 5:
-			SceneManager.LoadScene ("Level5", LoadSceneMode.Single);
+			SceneManager.LoadScene ("Level5");
 			break;
 		case 6:
 			SceneManager.LoadScene ("Level6");
@@ -52,9 +52,5 @@ public class LevelSelection : MonoBehaviour {
 			break;
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }
