@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour {
 	bool once3 = true;
 	bool clockwise = true;
 	bool oncePush;
+	bool hasPushed;
 	bool hasTouched = false;
 	bool useLastTouch = false;
 	Vector2 lastTouch;
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour {
 		pushCounter = 0;
 		pushRunningTotal = 0;
 		oncePush = true;
+		hasPushed = false;
 		yellowHandSprite = Resources.Load <Sprite> ("YellowHand");
 		yellowHandSprite2 = Resources.Load <Sprite> ("YellowHand2");
 		faceSprite = Resources.Load <Sprite> ("blob");
@@ -170,6 +172,8 @@ public class PlayerController : MonoBehaviour {
 				if (magnitude > maxSoFarPush) {
 					maxSoFarPush = magnitude;
 				}
+					
+
 				//pushCounter += 1f;
 				//pushRunningTotal += magnitude;
 
@@ -180,6 +184,16 @@ public class PlayerController : MonoBehaviour {
 			} else {
 				//pushRunningTotal = 0;
 				//pushCounter = 0;
+				if (isTouching) {
+					if (oncePush) {
+						blob.GetComponent<Rigidbody2D> ().mass = 10000;
+						//float average = pushRunningTotal / pushCounter;
+						blob.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Mathf.Sin ((360 - handAngle) * Mathf.Deg2Rad) * maxSoFarPush * -1,
+							Mathf.Cos ((360 - handAngle) * Mathf.Deg2Rad) * maxSoFarPush * -1));
+						oncePush = false;
+						hasPushed = true;
+					}
+				}
 				maxSoFarPush = 0;
 				/*if (oncePush) {
 					float average = pushRunningTotal / pushCounter;
@@ -194,7 +208,9 @@ public class PlayerController : MonoBehaviour {
 				Vector2 tempConnectedAnchor = blob.GetComponent<HingeJoint2D> ().connectedAnchor;
 				blob.GetComponent<HingeJoint2D> ().connectedAnchor = connectedAnchor - (connectedAnchor - connectedAnchor * (distance) / 3f);
 				if(isTouching && minAngle < 10f){
-					blob.GetComponent<Rigidbody2D> ().mass = 40;
+					if (!hasPushed) {
+						blob.GetComponent<Rigidbody2D> ().mass = 40;
+					}
 				}else{
 					blob.GetComponent<Rigidbody2D> ().mass = 10000;
 				}
@@ -328,6 +344,7 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		blob.GetComponent<HingeJoint2D> ().motor = motor;
+		hasPushed = false;
 
 	}
 }
