@@ -67,8 +67,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		if (EventSystem.current.IsPointerOverGameObject(0) || EventSystem.current.IsPointerOverGameObject(1))
-			return;
 		if (Input.touchCount > 0){
 			hasTouched = true;
 			useLastTouch = false;
