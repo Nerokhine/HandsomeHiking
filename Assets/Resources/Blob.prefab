@@ -156,7 +156,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 1311010840863712}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: ebbf47661023945b6af774010469f219, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -452,7 +452,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 1298514045197426}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: cfcc1eed21df94f81b07eb712113d5b4, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -793,7 +793,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 1311010840863712}
   m_Enabled: 0
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: ebbf47661023945b6af774010469f219, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

@@ -11,8 +11,9 @@ public class LevelController : MonoBehaviour {
 	public GameObject blurPanel;
 	// Use this for initialization
 	void Start () {
-		numStars = 1;
+		numStars = 2;
 		numStarsCollected = 0;
+		GameObject.Find ("ScoreText").GetComponent<Text> ().text = numStarsCollected + "/" + numStars;
 	}
 
 	public void CollectStar(){
